@@ -1,0 +1,7 @@
+MANIFEST
+Makefile.PL
+README
+lib/POE/Component/WWW/Shorten.pm
+t/1.t
+t/2.t
+META.yml                                 Module meta-data (added by MakeMaker)
