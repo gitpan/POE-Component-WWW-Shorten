@@ -1,12 +1,12 @@
 package POE::Component::WWW::Shorten;
 
 use strict;
+use warnings;
 use POE 0.31 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
-use WWW::Shorten;
 
-$VERSION = '0.85';
+$VERSION = '1.00';
 
 sub spawn {
   my ($package) = shift;
@@ -18,6 +18,13 @@ sub spawn {
   }
 
   delete ( $parms{'options'} ) unless ( ref ( $parms{'options'} ) eq 'HASH' );
+  my $type = delete ( $parms{'type'} ) || 'Metamark';
+
+  eval {
+	require WWW::Shorten;
+	import WWW::Shorten $type;
+  };
+  die "Problem loading WWw::Shorten \'$type\', please check\n" if ($@);
 
   my $self = bless \%parms, $package;
 
@@ -189,7 +196,7 @@ POE::Component::WWW::Shorten - A non-blocking wrapper around L<WWW::Shorten>.
 
   use POE qw(Component::WWW::Shorten);
 
-  my $poco = POE::Component::WWW::Shorten->spawn( alias => 'shorten' );
+  my $poco = POE::Component::WWW::Shorten->spawn( alias => 'shorten', type => 'Metamark' );
 
   POE::Session->create(
 	package_states => [
@@ -229,7 +236,7 @@ POE::Component::WWW::Shorten - A non-blocking wrapper around L<WWW::Shorten>.
 POE::Component::WWW::Shorten is a L<POE> component that provides a non-blocking wrapper around
 L<WWW::Shorten>. It accepts 'shorten' events and will return a shortened url.
 
-Currently, the component will only work with the L<WWW::Shorten> default which is L<WWW::Shorten::Metamark>. Support for other subclasses will be available in further releases.
+If the type of shortening to do is not specified it uses the L<WWW::Shorten> default which is L<WWW::Shorten::Metamark>.
 
 =head1 CONSTRUCTOR
 
@@ -239,8 +246,9 @@ Currently, the component will only work with the L<WWW::Shorten> default which i
 
 Takes a number of arguments all are optional. Returns an object.
 
-  'alias', specify a POE Kernel alias for the component
-  'options', a hashref of POE Session options to pass to the component's session.
+  'alias', specify a POE Kernel alias for the component;
+  'options', a hashref of POE Session options to pass to the component's session;
+  'type', the WWW::Shorten sub module to use, default is 'Metamark';
 
 =back
 
@@ -300,6 +308,4 @@ Chris 'BinGOs' Williams
 
 =head1 SEE ALSO
 
-L<POE>
-
-L<WWW::Shorten>
+L<POE>, L<WWW::Shorten>
