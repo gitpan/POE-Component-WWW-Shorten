@@ -1,21 +1,9 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl 1.t'
-
-#########################
-
-# change 'tests => 1' to 'tests => last_test_to_print';
-
 use Test::More tests => 3;
 BEGIN { use_ok('POE::Component::WWW::Shorten') };
 
-#########################
-
-# Insert your test code below, the Test::More module is use()ed here so read
-# its man page ( perldoc Test::More ) for help writing this test script.
-
 use POE;
 
-my ($self) = POE::Component::WWW::Shorten->spawn();
+my $self = POE::Component::WWW::Shorten->spawn( options => { trace => 0 } );
 
 isa_ok ( $self, 'POE::Component::WWW::Shorten' );
 
@@ -28,7 +16,7 @@ exit 0;
 
 sub test_start {
   my ($kernel,$heap) = @_[KERNEL,HEAP];
-
   pass('blah');
   $self->shutdown();
+  undef;
 }

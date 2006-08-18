@@ -6,19 +6,17 @@ use POE 0.31 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 sub spawn {
-  my ($package) = shift;
+  my $package = shift;
   croak "$package requires an even number of parameters" if @_ & 1;
   my %parms = @_;
 
-  foreach my $key ( keys %parms ) {
-	$parms{ lc $key } = delete $parms{$key};
-  }
+  $parms{ lc $_ } = delete $parms{$_} for keys %parms;
 
-  delete ( $parms{'options'} ) unless ( ref ( $parms{'options'} ) eq 'HASH' );
-  my $type = delete ( $parms{'type'} ) || 'Metamark';
+  delete $parms{'options'} unless ref ( $parms{'options'} ) eq 'HASH';
+  my $type = delete $parms{'type'} || 'Metamark';
 
   eval {
 	require WWW::Shorten;
@@ -33,7 +31,7 @@ sub spawn {
 		$self => { shorten => '_shorten',
 			   shutdown => '_shutdown',
 		},
-		$self => [ qw(_child_error _child_closed _child_stdout _child_stderr _start) ],
+		$self => [ qw(_child_error _child_closed _child_stdout _child_stderr _sig_chld _start) ],
 	],
 	( defined ( $parms{'options'} ) ? ( options => $parms{'options'} ) : () ),
   )->ID();
@@ -44,6 +42,8 @@ sub spawn {
 sub _start {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   $self->{session_id} = $_[SESSION]->ID();
+  $kernel->sig( 'CHLD' => '_sig_chld' );
+
   if ( $self->{alias} ) {
 	$kernel->alias_set( $self->{alias} );
   } else {
@@ -61,10 +61,12 @@ sub _start {
 	( $^O eq 'MSWin32' ? ( CloseOnCall => 0 ) : ( CloseOnCall => 1 ) ),
   );
 
-  unless ( $self->{wheel} ) {
-	$kernel->yield( 'shutdown' );
-  }
+  $kernel->yield( 'shutdown' ) unless $self->{wheel};
   undef;
+}
+
+sub _sig_chld {
+  $_[KERNEL]->sig_handled();
 }
 
 sub session_id {
@@ -72,7 +74,7 @@ sub session_id {
 }
 
 sub shorten {
-  my ($self) = shift;
+  my $self = shift;
   $poe_kernel->post( $self->{session_id} => 'shorten' => @_ );
 }
 
@@ -80,7 +82,7 @@ sub _shorten {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   my $sender = $_[SENDER]->ID();
 
-  return if ( $self->{shutdown} );
+  return if $self->{shutdown};
   my $args;
   if ( ref( $_[ARG0] ) eq 'HASH' ) {
 	$args = { %{ $_[ARG0] } };
@@ -91,8 +93,8 @@ sub _shorten {
   }
 
   foreach my $key ( keys %{ $args } ) {
-	  next if ( $key =~ /^_/ );
-	  $args->{ lc ( $key ) } = delete ( $args->{ $key } );
+	  next if $key =~ /^_/;
+	  $args->{ lc $key } = delete $args->{ $key };
   }
 
   unless ( $args->{event} ) {
@@ -112,7 +114,7 @@ sub _shorten {
 }
 
 sub shutdown {
-  my ($self) = shift;
+  my $self = shift;
   $poe_kernel->post( $self->{session_id} => 'shutdown' => @_ );
 }
 
@@ -120,41 +122,36 @@ sub _shutdown {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
 
   $kernel->alias_remove( $_ ) for $kernel->alias_list();
-
-  unless ( $self->{alias} ) {
-	$kernel->refcount_decrement( $self->{session_id} => __PACKAGE__ );
-  }
-
+  $kernel->refcount_decrement( $self->{session_id} => __PACKAGE__ ) unless $self->{alias};
   $self->{shutdown} = 1;
-  $self->{wheel}->shutdown_stdin if ( $self->{wheel} );
+  $self->{wheel}->shutdown_stdin if $self->{wheel};
   undef;
 }
 
 sub _child_closed {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
-  delete ( $self->{wheel} );
-  $kernel->yield( 'shutdown' );
+  delete $self->{wheel};
+  $kernel->yield( 'shutdown' ) unless $self->{shutdown};
   undef;
 }
 
 sub _child_error {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
-  delete ( $self->{wheel} );
-  $kernel->yield( 'shutdown' );
+  delete $self->{wheel};
+  $kernel->yield( 'shutdown' ) unless $self->{shutdown};
   undef;
 }
 
 sub _child_stderr {
   my ($kernel,$self,$input) = @_[KERNEL,OBJECT,ARG0];
-
-  warn "$input\n" if ( $self->{debug} );
+  warn "$input\n" if $self->{debug};
   undef;
 }
 
 sub _child_stdout {
   my ($kernel,$self,$input) = @_[KERNEL,OBJECT,ARG0];
-  my ($session) = delete ( $input->{sender} );
-  my ($event) = delete ( $input->{event} );
+  my $session = delete $input->{sender};
+  my $event = delete $input->{event};
 
   $kernel->post( $session, $event, $input );
   $kernel->refcount_decrement( $session => __PACKAGE__ );
