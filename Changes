@@ -1,0 +1,7 @@
+POE::Component::WWW::Shorten
+============================
+
+1.02	Fri Sep 08 17:28:39 BST 2006
+	- Added Changes file
+	- Added POD tests
+	- Added examples/synopsis.pl

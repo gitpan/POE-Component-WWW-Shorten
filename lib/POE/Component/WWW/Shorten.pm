@@ -6,7 +6,7 @@ use POE 0.31 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 sub spawn {
   my $package = shift;
@@ -51,7 +51,7 @@ sub _start {
   }
 
   $self->{wheel} = POE::Wheel::Run->new(
-	Program => \&shorten_wheel,
+	Program => \&_shorten_wheel,
 	ErrorEvent => '_child_error',
 	CloseEvent => '_child_closed',
 	StdoutEvent => '_child_stdout', 
@@ -66,6 +66,7 @@ sub _start {
 }
 
 sub _sig_chld {
+  $_[KERNEL]->sig('CHLD');
   $_[KERNEL]->sig_handled();
 }
 
@@ -158,7 +159,7 @@ sub _child_stdout {
   undef;  
 }
 
-sub shorten_wheel {
+sub _shorten_wheel {
   if ( $^O eq 'MSWin32' ) {
      binmode(STDIN); binmode(STDOUT);
   }
