@@ -6,7 +6,7 @@ use POE 0.31 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.02';
+$VERSION = '1.03';
 
 sub spawn {
   my $package = shift;
