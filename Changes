@@ -1,6 +1,9 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.04	Sun Oct 01 13:16:04 BST 2006
+	- Changed to POE 0.38 sig_child() semantics.
+
 1.03	Tue Sep 26 13:53:04 BST 2006
 	- Switched Module::Install
 

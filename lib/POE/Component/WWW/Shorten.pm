@@ -2,11 +2,11 @@ package POE::Component::WWW::Shorten;
 
 use strict;
 use warnings;
-use POE 0.31 qw(Wheel::Run Filter::Line Filter::Reference);
+use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.03';
+$VERSION = '1.04';
 
 sub spawn {
   my $package = shift;
@@ -42,7 +42,7 @@ sub spawn {
 sub _start {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   $self->{session_id} = $_[SESSION]->ID();
-  $kernel->sig( 'CHLD' => '_sig_chld' );
+  #$kernel->sig( 'CHLD' => '_sig_chld' );
 
   if ( $self->{alias} ) {
 	$kernel->alias_set( $self->{alias} );
@@ -62,11 +62,11 @@ sub _start {
   );
 
   $kernel->yield( 'shutdown' ) unless $self->{wheel};
+  $kernel->sig_child( $self->{wheel}->PID, '_sig_child' );
   undef;
 }
 
 sub _sig_chld {
-  $_[KERNEL]->sig('CHLD');
   $_[KERNEL]->sig_handled();
 }
 
@@ -93,10 +93,7 @@ sub _shorten {
 	$args = { @_[ARG0..$#_] };
   }
 
-  foreach my $key ( keys %{ $args } ) {
-	  next if $key =~ /^_/;
-	  $args->{ lc $key } = delete $args->{ $key };
-  }
+  $args->{lc $_} = delete $args->{$_} for grep { $_ !~ /^_/ } keys %{ $args };
 
   unless ( $args->{event} ) {
 	warn "where am i supposed to send the output?";

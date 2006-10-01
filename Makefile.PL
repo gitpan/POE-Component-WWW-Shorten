@@ -7,7 +7,7 @@ author 'Chris Williams <chris@bingosnet.co.uk>';
 WriteMakefile(
 			  'NAME'	=> 'POE::Component::WWW::Shorten',
 			  'PREREQ_PM' => {
-					  'POE'    => 0.31,
+					  'POE'    => 0.38,
 					  'Carp'   => 0,
 					  'WWW::Shorten' => 1.95,
 					 },

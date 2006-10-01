@@ -10,6 +10,6 @@ no_index:
     - t
 requires:
   Carp: 0
-  POE: 0.31
+  POE: 0.38
   WWW::Shorten: 1.95
-version: 1.03
+version: 1.04
