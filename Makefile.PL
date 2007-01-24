@@ -1,17 +1,9 @@
-#use ExtUtils::MakeMaker;
 use inc::Module::Install;
-
+name 'POE-Component-WWW-Shorten';
 license 'perl';
 author 'Chris Williams <chris@bingosnet.co.uk>';
-
-WriteMakefile(
-			  'NAME'	=> 'POE::Component::WWW::Shorten',
-			  'PREREQ_PM' => {
-					  'POE'    => 0.38,
-					  'Carp'   => 0,
-					  'WWW::Shorten' => 1.95,
-					 },
-			  'VERSION_FROM' => 'lib/POE/Component/WWW/Shorten.pm',
-			  'dist' => { 'COMPRESS' => 'gzip --best' },
-			 );
-
+version_from 'lib/POE/Component/WWW/Shorten.pm';
+requires 'Carp' => 0;
+requires 'POE' => 0.38;
+requires 'WWW::Shorten' => 1.95;
+WriteAll();

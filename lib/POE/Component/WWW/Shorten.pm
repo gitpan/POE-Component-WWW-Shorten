@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.04';
+$VERSION = '1.05';
 
 sub spawn {
   my $package = shift;
@@ -22,7 +22,7 @@ sub spawn {
 	require WWW::Shorten;
 	import WWW::Shorten $type;
   };
-  die "Problem loading WWw::Shorten \'$type\', please check\n" if ($@);
+  die "Problem loading WWW::Shorten \'$type\', please check\n" if $@;
 
   my $self = bless \%parms, $package;
 
@@ -42,11 +42,11 @@ sub spawn {
 sub _start {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   $self->{session_id} = $_[SESSION]->ID();
-  #$kernel->sig( 'CHLD' => '_sig_chld' );
 
   if ( $self->{alias} ) {
 	$kernel->alias_set( $self->{alias} );
-  } else {
+  } 
+  else {
 	$kernel->refcount_increment( $self->{session_id} => __PACKAGE__ );
   }
 
@@ -67,7 +67,7 @@ sub _start {
 }
 
 sub _sig_chld {
-  $_[KERNEL]->sig_handled();
+  $poe_kernel->sig_handled();
 }
 
 sub session_id {
@@ -118,7 +118,7 @@ sub shutdown {
 
 sub _shutdown {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
-
+  $kernel->alarm_remove_all();
   $kernel->alias_remove( $_ ) for $kernel->alias_list();
   $kernel->refcount_decrement( $self->{session_id} => __PACKAGE__ ) unless $self->{alias};
   $self->{shutdown} = 1;
@@ -167,17 +167,11 @@ sub _shorten_wheel {
   while ( sysread ( STDIN, $raw, $size ) ) {
     my $requests = $filter->get( [ $raw ] );
     foreach my $req ( @{ $requests } ) {
-	_process_requests( $req, $filter );
+        $req->{short} = makeashorterlink( $req->{url} );
+        my $response = $filter->put( [ $req ] );
+        print STDOUT @$response;
     }
   }
-}
-
-sub _process_requests {
-  my ($req,$filter) = @_;
-
-  $req->{short} = makeashorterlink( $req->{url} );
-  my $response = $filter->put( [ $req ] );
-  print STDOUT @$response;
 }
 
 1;

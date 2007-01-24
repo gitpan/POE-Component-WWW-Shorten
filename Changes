@@ -1,6 +1,10 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.05	Wed Jan 24 10:24:56 GMT 2006
+	- Makefile.PL totally M::I now.
+	- Minor code refactoring.
+
 1.04	Sun Oct 01 13:16:04 BST 2006
 	- Changed to POE 0.38 sig_child() semantics.
 
