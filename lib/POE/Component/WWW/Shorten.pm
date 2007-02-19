@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.05';
+$VERSION = '1.06';
 
 sub spawn {
   my $package = shift;
@@ -113,7 +113,7 @@ sub _shorten {
 
 sub shutdown {
   my $self = shift;
-  $poe_kernel->post( $self->{session_id} => 'shutdown' => @_ );
+  $poe_kernel->call( $self->{session_id} => 'shutdown' => @_ );
 }
 
 sub _shutdown {

@@ -1,6 +1,9 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.06	Mon Feb 19 16:29:29 GMT 2007
+	- Added kwalitee test.
+
 1.05	Wed Jan 24 10:24:56 GMT 2006
 	- Makefile.PL totally M::I now.
 	- Minor code refactoring.
