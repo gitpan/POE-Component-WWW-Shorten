@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.06';
+$VERSION = '1.07';
 
 sub spawn {
   my $package = shift;
@@ -179,7 +179,7 @@ __END__
 
 =head1 NAME
 
-POE::Component::WWW::Shorten - A non-blocking wrapper around L<WWW::Shorten>.
+POE::Component::WWW::Shorten - A non-blocking wrapper around WWW::Shorten.
 
 =head1 SYNOPSIS
 

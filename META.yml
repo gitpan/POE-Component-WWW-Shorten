@@ -1,7 +1,14 @@
+--- 
+abstract: A non-blocking wrapper around WWW::Shorten.
 author: Chris Williams <chris@bingosnet.co.uk>
+build_requires: 
+  Test::More: 0.47
 distribution_type: module
-generated_by: Module::Install version 0.64
+generated_by: Module::Install version 0.67
 license: perl
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
 name: POE-Component-WWW-Shorten
 no_index: 
   directory: 
@@ -11,4 +18,4 @@ requires:
   Carp: 0
   POE: 0.38
   WWW::Shorten: 1.95
-version: 1.06
+version: 1.07
