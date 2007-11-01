@@ -1,10 +1,11 @@
 --- 
 abstract: A non-blocking wrapper around WWW::Shorten.
-author: Chris Williams <chris@bingosnet.co.uk>
+author: 
+  - Chris Williams <chris@bingosnet.co.uk>
 build_requires: 
   Test::More: 0.47
 distribution_type: module
-generated_by: Module::Install version 0.67
+generated_by: Module::Install version 0.68
 license: perl
 meta-spec: 
   url: http://module-build.sourceforge.net/META-spec-v1.3.html
@@ -18,4 +19,5 @@ requires:
   Carp: 0
   POE: 0.38
   WWW::Shorten: 1.95
-version: 1.07
+  warnings: 0
+version: 1.08
