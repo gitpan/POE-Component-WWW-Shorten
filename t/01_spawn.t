@@ -1,14 +1,13 @@
 use Test::More tests => 3;
-BEGIN { use_ok('POE::Component::WWW::Shorten') };
-
 use POE;
+use_ok('POE::Component::WWW::Shorten');
 
-my $self = POE::Component::WWW::Shorten->spawn( options => { trace => 0 } );
+my $self = POE::Component::WWW::Shorten->spawn( options => { default => 1 } );
 
 isa_ok ( $self, 'POE::Component::WWW::Shorten' );
 
 POE::Session->create(
-        inline_states => { _start => \&test_start, },
+        inline_states => { _start => \&test_start, _stop => sub { return; }, },
 );
 
 $poe_kernel->run();

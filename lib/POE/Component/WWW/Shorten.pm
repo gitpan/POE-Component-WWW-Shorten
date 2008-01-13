@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.09';
+$VERSION = '1.10';
 
 sub spawn {
   my $package = shift;
@@ -31,7 +31,7 @@ sub spawn {
 		$self => { shorten => '_shorten',
 			   shutdown => '_shutdown',
 		},
-		$self => [ qw(_child_error _child_closed _child_stdout _child_stderr _sig_chld _start) ],
+		$self => [ qw(_child_error _child_closed _child_stdout _child_stderr _sig_chld _start _stop) ],
 	],
 	( defined ( $parms{'options'} ) ? ( options => $parms{'options'} ) : () ),
   )->ID();
@@ -62,8 +62,12 @@ sub _start {
   );
 
   $kernel->yield( 'shutdown' ) unless $self->{wheel};
-  $kernel->sig_child( $self->{wheel}->PID, '_sig_child' );
+  $kernel->sig_child( $self->{wheel}->PID, '_sig_chld' );
   undef;
+}
+
+sub _stop {
+  return;
 }
 
 sub _sig_chld {

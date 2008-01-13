@@ -1,6 +1,10 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.10	Sun Jan 13 09:56:22 GMT 2008
+	- Fixed typo spotted by Zoffix Znet.
+	- Tidied up test naming
+
 1.09	Sat Nov 17 14:52:36 GMT 2007
 	- Added 'session' option to 'shorten' as per request from Zoffix.
 
