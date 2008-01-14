@@ -1,6 +1,9 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.12	Mon Jan 14 12:24:08 GMT 2008
+	- Fixed a problem with refcounts, reported by Zoffix Znet
+
 1.10	Sun Jan 13 09:56:22 GMT 2008
 	- Fixed typo spotted by Zoffix Znet.
 	- Tidied up test naming

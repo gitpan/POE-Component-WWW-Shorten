@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.10';
+$VERSION = '1.12';
 
 sub spawn {
   my $package = shift;
@@ -122,7 +122,7 @@ sub _shorten {
     $args->{sender} = $sender;
   }
 
-  $kernel->refcount_increment( $sender => __PACKAGE__ );
+  $kernel->refcount_increment( $args->{sender} => __PACKAGE__ );
   $self->{wheel}->put( $args );
   undef;
 }
