@@ -1,6 +1,10 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.14	Mon Feb 25 16:34:53 GMT 2008
+	- Doc fixes. Mainly a release to get rid of all the fails on CPAN
+	  Testers due to dodgy smoker setups at the time of the last release.
+
 1.12	Mon Jan 14 12:24:08 GMT 2008
 	- Fixed a problem with refcounts, reported by Zoffix Znet
 

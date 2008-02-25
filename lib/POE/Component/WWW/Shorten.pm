@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.12';
+$VERSION = '1.14';
 
 sub spawn {
   my $package = shift;
@@ -289,7 +289,8 @@ Requires a hashref as first argument. The hashref should contain the following k
 
   'url', the url that you want shortening. ( Mandatory ).
   'event', the name of the event to send the reply to. ( Mandatory ).
-  'session', optional, an alternative session: alias, ref or ID that the response should be sent to, defaults to sending session;
+  'session', optional, an alternative session: alias, ref or ID that the response should be 
+	     sent to, defaults to sending session;
 
 You may also pass arbitary key/values in the hashref ( as demonstrated in the SYNOPSIS ). Arbitary keys should have an underscore prefix '_'.
 
@@ -310,8 +311,10 @@ The hashref will also contain any arbitary key/values that were passed in the or
 
 =head1 AUTHOR
 
-Chris 'BinGOs' Williams
+Chris C<BinGOs> Williams <chris@bingosnet.co.uk>
 
 =head1 SEE ALSO
 
-L<POE>, L<WWW::Shorten>
+L<POE> 
+
+L<WWW::Shorten>
