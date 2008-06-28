@@ -1,6 +1,9 @@
 POE::Component::WWW::Shorten
 ============================
 
+1.16	Sat Jun 28 08:42:18 BST 2008
+	- Added LICENSE information.
+
 1.14	Mon Feb 25 16:34:53 GMT 2008
 	- Doc fixes. Mainly a release to get rid of all the fails on CPAN
 	  Testers due to dodgy smoker setups at the time of the last release.

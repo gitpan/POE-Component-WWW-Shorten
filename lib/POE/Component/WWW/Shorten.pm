@@ -6,7 +6,7 @@ use POE 0.38 qw(Wheel::Run Filter::Line Filter::Reference);
 use vars qw($VERSION);
 use Carp;
 
-$VERSION = '1.14';
+$VERSION = '1.16';
 
 sub spawn {
   my $package = shift;
@@ -312,6 +312,12 @@ The hashref will also contain any arbitary key/values that were passed in the or
 =head1 AUTHOR
 
 Chris C<BinGOs> Williams <chris@bingosnet.co.uk>
+
+=head1 LICENSE
+
+Copyright (C) Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 
