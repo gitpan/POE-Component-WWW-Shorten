@@ -8,7 +8,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.85'
+generated_by: 'Module::Install version 1.00'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,11 +19,16 @@ no_index:
     - examples
     - inc
     - t
+provides:
+  POE::Component::WWW::Shorten:
+    file: lib/POE/Component/WWW/Shorten.pm
+    version: 1.20
 requires:
   POE: 1.005
   WWW::Shorten: 1.98
   perl: 5.6.0
 resources:
+  homepage: http://github.com/bingos/poe-component-www-shorten/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/bingos/poe-component-www-shorten.git
-version: 1.18
+version: 1.20
